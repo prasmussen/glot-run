@@ -1,0 +1,20 @@
+{application, glot, [
+  {description, ""},
+  {vsn, "1.0.0"},
+  {registered, []},
+  {applications, [
+    kernel,
+    stdlib,
+    crypto,
+    compiler,
+    syntax_tools,
+    goldrush,
+    lager,
+    cowboy,
+    jsx,
+    hackney,
+    eleveldb
+  ]},
+  {mod, { glot_app, []}},
+  {env, []}
+]}.
