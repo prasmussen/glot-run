@@ -34,7 +34,8 @@ is_supported(Language) ->
     lists:member(Language, list()).
 
 is_supported(Language, Version) ->
-    maps:is_key({Language, Version}, datastore:language_list()).
+    Id = identifier(Language, Version),
+    maps:is_key(Id, datastore:language_list()).
 
 list() ->
     maps:fold(fun(Id, {Lang, Vsn, Image}, Acc) ->
@@ -58,7 +59,7 @@ list_versions(Language) ->
 
 get_image(Language, Version) ->
     Id = identifier(Language, Version),
-    {ok, Image} = maps:find(Id, datastore:language_list()),
+    {ok, {_, _, Image}} = maps:find(Id, datastore:language_list()),
     Image.
 
 sort_and_remove_duplicates(List) ->
