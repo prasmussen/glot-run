@@ -1,4 +1,4 @@
--module(tokens_resource).
+-module(admin_tokens_resource).
 -export([
     init/3,
     rest_init/2,
@@ -6,7 +6,8 @@
     content_types_accepted/2,
     content_types_provided/2,
     %is_authorized/2,
-    accept_post/2
+    list_tokens/2,
+    accept_put/2
 ]).
 
 -define(INVALID_JSON, <<"Invalid json">>).
@@ -19,18 +20,18 @@ rest_init(Req, []) ->
     {ok, Req, []}.
 
 allowed_methods(Req, State) ->
-    Methods = [<<"GET">>, <<"POST">>],
+    Methods = [<<"GET">>, <<"PUT">>],
     {Methods, Req, State}.
 
 content_types_accepted(Req, State) ->
     Handlers = [
-        {{<<"application">>, <<"json">>, '*'}, accept_post}
+        {{<<"application">>, <<"json">>, '*'}, accept_put}
     ],
     {Handlers, Req, State}.
 
 content_types_provided(Req, State) ->
     Handlers = [
-        {{<<"application">>, <<"json">>, '*'}, noop}
+        {{<<"application">>, <<"json">>, '*'}, list_tokens}
     ],
     {Handlers, Req, State}.
 
@@ -40,7 +41,11 @@ content_types_provided(Req, State) ->
 %        Unauthorized -> Unauthorized
 %    end.
 
-accept_post(Req, State) ->
+list_tokens(Req, State) ->
+    Tokens = token:list(),
+    {jsx:encode(Tokens), Req, State}.
+
+accept_put(Req, State) ->
     decode_body(fun save_token/3, Req, State).
 
 save_token(Data, Req, State) ->

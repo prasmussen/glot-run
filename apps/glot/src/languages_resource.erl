@@ -14,7 +14,7 @@ rest_init(Req, []) ->
     {ok, Req, []}.
 
 allowed_methods(Req, State) ->
-    Methods = [<<"GET">>, <<"POST">>],
+    Methods = [<<"GET">>],
     {Methods, Req, State}.
 
 content_types_provided(Req, State) ->
@@ -24,11 +24,5 @@ content_types_provided(Req, State) ->
     {Handlers, Req, State}.
 
 list_languages(Req, State) ->
-    Data = jsx:encode([
-        #{name => <<"erlang">>},
-        #{name => <<"haskell">>},
-        #{name => <<"clojure">>},
-        #{name => <<"rust">>},
-        #{name => <<"go">>}
-    ]),
-    {Data, Req, State}.
+    Languages = language:list(),
+    {jsx:encode(Languages), Req, State}.

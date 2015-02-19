@@ -3,12 +3,16 @@
 -export([
     open/1,
     close/1,
+    language_list/1,
+    language_save/2,
+    language_delete/2,
     token_list/1,
     token_save/2,
     token_delete/2
 ]).
 
 -define(TOKENS_KEY, <<"tokens">>).
+-define(LANGUAGES_KEY, <<"languages">>).
 
 open_options() ->
     [
@@ -32,6 +36,20 @@ open(Path) ->
 close(Db) ->
     eleveldb:close(Db).
 
+language_save(Db, {Id, Language}) ->
+    Actions = [
+        add_language_action(Db, Id, Language)
+    ],
+    ok = eleveldb:write(Db, Actions, write_options()),
+    Language.
+
+language_delete(Db, {Id}) ->
+    Actions = [
+        remove_language_action(Db, Id)
+    ],
+    ok = eleveldb:write(Db, Actions, write_options()),
+    Id.
+
 token_save(Db, {Token}) ->
     Actions = [
         add_token_action(Db, Token)
@@ -45,6 +63,18 @@ token_delete(Db, {Token}) ->
     ],
     ok = eleveldb:write(Db, Actions, write_options()),
     Token.
+
+language_list(Db) ->
+    Res = eleveldb:get(Db, ?LANGUAGES_KEY, read_options()),
+    unmarshal(Res, maps:new()).
+
+add_language_action(Db, Id, Language) ->
+    Languages = maps:put(Id, Language, language_list(Db)),
+    {put, ?LANGUAGES_KEY, marshal(Languages)}.
+
+remove_language_action(Db, Id) ->
+    Languages = maps:remove(Id, language_list(Db)),
+    {put, ?LANGUAGES_KEY, marshal(Languages)}.
 
 token_list(Db) ->
     Res = eleveldb:get(Db, ?TOKENS_KEY, read_options()),

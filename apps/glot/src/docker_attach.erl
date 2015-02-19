@@ -107,19 +107,22 @@ parse_data(Data) ->
     parse_data(list_to_binary(lists:reverse(Data)), []).
 
 parse_data(<<>>, Bodies) ->
-    format_bodies(lists:reverse(Bodies));
+    format_response(lists:reverse(Bodies));
 parse_data(Data, Bodies) ->
     <<Type:8, 0, 0, 0, Size:32, Rest/binary>> = Data,
     <<Body:Size/binary, Next/binary>> = Rest,
     parse_data(Next, [{Type, Body}|Bodies]).
 
-% TODO: {stdout: foo, stderr: bar} should be returned from glot-runner on stdout
-% if stderr return 400
-format_bodies(Data) ->
-    #{
-        stdout => list_to_binary(proplists:get_all_values(1, Data)),
-        stderr => list_to_binary(proplists:get_all_values(2, Data))
-    }.
+format_response(Data) ->
+    format_response(
+        proplists:get_all_values(1, Data),
+        proplists:get_all_values(2, Data)
+    ).
+
+format_response(Stdout, []) ->
+    {ok, list_to_binary(Stdout)};
+format_response(_, Stderr) ->
+    {error, list_to_binary(Stderr)}.
 
 attach(FsmPid, ContainerId) ->
     gen_fsm:sync_send_event(FsmPid, {attach, ContainerId}).

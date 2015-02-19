@@ -1,10 +1,14 @@
 -module(token).
 
 -export([
+    list/0,
     save/1,
     delete/1,
     is_valid/1
 ]).
+
+list() ->
+    sets:to_list(datastore:token_list()).
 
 save(Token) ->
     datastore:token_save(Token).

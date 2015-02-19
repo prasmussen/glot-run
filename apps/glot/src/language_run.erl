@@ -4,15 +4,24 @@
     run/3
 ]).
 
-run(_Language, _Version, Payload) ->
-    Config = create_docker_config(<<"prasmussen/glot-python">>),
+run(Language, Version, Files) ->
+    Image = language:get_image(Language, Version),
+    Config = create_docker_config(Image),
     CreateResponse = docker:container_create(Config),
     ContainerId = proplists:get_value(<<"Id">>, CreateResponse),
     docker:container_start(ContainerId),
     Pid = docker:container_attach(ContainerId),
+    Payload = prepare_payload(Language, Files),
+    lager:info("payload: ~p", [Payload]),
     SendResponse = docker:container_send(Pid, Payload),
     docker:container_remove(ContainerId),
     SendResponse.
+
+prepare_payload(Language, Files) ->
+    jsx:encode(#{
+        <<"language">> => Language,
+        <<"files">> => Files
+    }).
 
 create_docker_config(Image) ->
     Config = default_docker_config(),

@@ -11,6 +11,10 @@
     code_change/3,
     terminate/2,
 
+    language_list/0,
+    language_save/2,
+    language_delete/1,
+
     token_list/0,
     token_save/1,
     token_delete/1
@@ -31,6 +35,12 @@ init([]) ->
 stop() ->
     gen_server:call(?MODULE, stop).
 
+handle_call({language_list}, _From, Db) ->
+    {reply, datastore_db:language_list(Db), Db};
+handle_call({language_save, Args}, _From, Db) ->
+    {reply, datastore_db:language_save(Db, Args), Db};
+handle_call({language_delete, Args}, _From, Db) ->
+    {reply, datastore_db:language_delete(Db, Args), Db};
 handle_call({token_list}, _From, Db) ->
     {reply, datastore_db:token_list(Db), Db};
 handle_call({token_save, Args}, _From, Db) ->
@@ -50,6 +60,17 @@ code_change(_OldVsc, Db, _Extra) ->
 terminate(_Reason, Db) ->
     lager:info("closing db"),
     datastore_db:close(Db).
+
+language_list() ->
+    gen_server:call(?MODULE, {language_list}).
+
+language_save(Id, Language) ->
+    Args = {Id, Language},
+    gen_server:call(?MODULE, {language_save, Args}).
+
+language_delete(Id) ->
+    Args = {Id},
+    gen_server:call(?MODULE, {language_delete, Args}).
 
 token_list() ->
     gen_server:call(?MODULE, {token_list}).
