@@ -12,6 +12,7 @@
 ]).
 
 -define(INVALID_JSON, <<"Invalid json">>).
+-define(TIMEOUT_ERROR, <<"Code exceeded the maximum allowed running time">>).
 
 -record(state, {
     language,
@@ -70,8 +71,11 @@ run_code(Data, Req, State=#state{language=Lang, version=Vsn}) ->
     case language_run:run(Lang, Vsn, Data) of
         {ok, Res} ->
             {true, cowboy_req:set_resp_body(Res, Req), State};
+        {error, timeout} ->
+            Res = jsx:encode(#{<<"message">> => ?TIMEOUT_ERROR}),
+            {false, cowboy_req:set_resp_body(Res, Req), State};
         {error, Msg} ->
-            Res = jsx:encode(#{<<"error">> => Msg}),
+            Res = jsx:encode(#{<<"message">> => Msg}),
             {false, cowboy_req:set_resp_body(Res, Req), State}
     end.
 

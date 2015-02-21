@@ -3,6 +3,9 @@
 
 -include_lib("hackney/include/hackney_lib.hrl").
 
+% Wait 1 hour before giving up when using sync calls
+-define(SYNC_TIMEOUT, 3600000).
+
 -export([
     start_link/0,
     init/1,
@@ -19,6 +22,7 @@
     recv_response/2,
 
     attach/2,
+    detach/2,
     send/2
 ]).
 
@@ -70,8 +74,12 @@ recv_response(Data, State=#state{buffer=Buffer}) ->
     NewState = State#state{buffer=[Data|Buffer]},
     {next_state, recv_response, NewState}.
 
+handle_event({detach, timeout}, _, State=#state{callback_pid=From, socket=Socket}) ->
+    gen_fsm:reply(From, {error, timeout}),
+    gen_tcp:close(Socket),
+    {stop, normal, State};
+
 handle_event(_Event, StateName, State) ->
-    lager:info("Got unhandled event"),
     {next_state, StateName, State}.
 
 handle_sync_event(_Event, _From, StateName, State) ->
@@ -125,9 +133,10 @@ format_response(_, Stderr) ->
     {error, list_to_binary(Stderr)}.
 
 attach(FsmPid, ContainerId) ->
-    gen_fsm:sync_send_event(FsmPid, {attach, ContainerId}).
+    gen_fsm:sync_send_event(FsmPid, {attach, ContainerId}, ?SYNC_TIMEOUT).
+
+detach(FsmPid, Reason) ->
+    gen_fsm:send_all_state_event(FsmPid, {detach, Reason}).
 
 send(FsmPid, Payload) ->
-    % TODO: Add proper timeout (same above)
-    % infinity? docker_gc will send shutdown signal
-    gen_fsm:sync_send_event(FsmPid, {payload, Payload}).
+    gen_fsm:sync_send_event(FsmPid, {payload, Payload}, ?SYNC_TIMEOUT).

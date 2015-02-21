@@ -5,7 +5,8 @@
     http_listen_ip/0,
     http_listen_port/0,
     datastore_path/0,
-    docker_api_url/0
+    docker_api_url/0,
+    docker_run_timeout/0
 ]).
 
 environment() ->
@@ -23,3 +24,6 @@ datastore_path() ->
 
 docker_api_url() ->
     list_to_binary(os:getenv("DOCKER_API_URL")).
+
+docker_run_timeout() ->
+    list_to_integer(os:getenv("DOCKER_RUN_TIMEOUT")).

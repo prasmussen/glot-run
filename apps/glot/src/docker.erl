@@ -5,6 +5,7 @@
     container_start/1,
     container_remove/1,
     container_attach/1,
+    container_detach/2,
     container_send/2
 ]).
 
@@ -16,7 +17,7 @@ container_create(Configuration) ->
         []
     ),
     {ok, Data} = hackney:body(Client),
-    jsx:decode(Data).
+    proplists:get_value(<<"Id">>, jsx:decode(Data)).
 
 container_start(Id) ->
     {ok, 204, _, _} = hackney:post(
@@ -40,6 +41,9 @@ container_attach(Id) ->
     {ok, Pid} = docker_attach_sup:start_child(),
     docker_attach:attach(Pid, Id),
     Pid.
+
+container_detach(Pid, Reason) ->
+    docker_attach:detach(Pid, Reason).
 
 container_send(Pid, Payload) ->
     docker_attach:send(Pid, Payload).
