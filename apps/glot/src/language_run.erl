@@ -67,7 +67,7 @@ default_docker_config() ->
         <<"Image">> => <<"">>,
         <<"Volumes">> => #{},
         <<"WorkingDir">> => <<"">>,
-        <<"NetworkDisabled">> => false,
+        <<"NetworkDisabled">> => true,
         %<<"MacAddress">> => <<"12:34:56:78:9a:bc">>,
         %<<"Memory">> => 0,
         %<<"MemorySwap">> => 0,
