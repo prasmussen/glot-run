@@ -11,7 +11,6 @@
     accept_post/2
 ]).
 
--define(INVALID_JSON, <<"Invalid json">>).
 -define(TIMEOUT_ERROR, <<"Code exceeded the maximum allowed running time">>).
 
 -record(state, {
@@ -61,7 +60,7 @@ resource_exists(Req, State) ->
     end.
 
 accept_post(Req, State) ->
-    decode_body(fun run_code/3, Req, State).
+    http_util:decode_body(fun run_code/3, Req, State).
 
 run_code(Data, Req, State=#state{language=Lang, version=Vsn}) ->
     lager:info("Data: ~p", [Data]),
@@ -74,16 +73,4 @@ run_code(Data, Req, State=#state{language=Lang, version=Vsn}) ->
         {error, Msg} ->
             Res = jsx:encode(#{<<"message">> => Msg}),
             {false, cowboy_req:set_resp_body(Res, Req), State}
-    end.
-
-decode_body(F, Req, State) ->
-    {ok, Body, Req2} = cowboy_req:body(Req),
-    case jsx:is_json(Body) of
-        true ->
-            Data = jsx:decode(Body),
-            F(Data, Req2, State);
-        false ->
-            Payload = jsx:encode([{message, ?INVALID_JSON}]),
-            {ok, Req3} = cowboy_req:reply(400, [], Payload, Req2),
-            {halt, Req3, State}
     end.

@@ -10,8 +10,6 @@
     accept_put/2
 ]).
 
--define(INVALID_JSON, <<"Invalid json">>).
-
 
 init(_Transport, _Req, _Opts) ->
     {upgrade, protocol, cowboy_rest}.
@@ -43,7 +41,7 @@ list_languages(Req, State) ->
     {jsx:encode(Languages), Req, State}.
 
 accept_put(Req, State) ->
-    decode_body(fun save_language/3, Req, State).
+    http_util:decode_body(fun save_language/3, Req, State).
 
 save_language(Data, Req, State) ->
     lager:info("data: ~p", [Data]),
@@ -51,18 +49,6 @@ save_language(Data, Req, State) ->
     {Lang, Vsn, Image} = proplist_to_language_tuple(Data),
     language:save(Lang, Vsn, Image),
     {true, Req, State}.
-
-decode_body(F, Req, State) ->
-    {ok, Body, Req2} = cowboy_req:body(Req),
-    case jsx:is_json(Body) of
-        true ->
-            Data = jsx:decode(Body),
-            F(Data, Req2, State);
-        false ->
-            Payload = jsx:encode([{message, ?INVALID_JSON}]),
-            {ok, Req3} = cowboy_req:reply(400, [], Payload, Req2),
-            {halt, Req3, State}
-    end.
 
 language_tuple_to_map({Id, Language, Version, Image}) ->
     #{

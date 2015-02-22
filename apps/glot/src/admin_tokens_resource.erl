@@ -10,8 +10,6 @@
     accept_put/2
 ]).
 
--define(INVALID_JSON, <<"Invalid json">>).
-
 
 init(_Transport, _Req, _Opts) ->
     {upgrade, protocol, cowboy_rest}.
@@ -43,22 +41,10 @@ list_tokens(Req, State) ->
     {jsx:encode(Tokens), Req, State}.
 
 accept_put(Req, State) ->
-    decode_body(fun save_token/3, Req, State).
+    http_util:decode_body(fun save_token/3, Req, State).
 
 save_token(Data, Req, State) ->
     Token = proplists:get_value(<<"token">>, Data),
     lager:info("Token: ~p", [Token]),
     user_token:save(Token),
     {true, Req, State}.
-
-decode_body(F, Req, State) ->
-    {ok, Body, Req2} = cowboy_req:body(Req),
-    case jsx:is_json(Body) of
-        true ->
-            Data = jsx:decode(Body),
-            F(Data, Req2, State);
-        false ->
-            Payload = jsx:encode([{message, ?INVALID_JSON}]),
-            {ok, Req3} = cowboy_req:reply(400, [], Payload, Req2),
-            {halt, Req3, State}
-    end.
