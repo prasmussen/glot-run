@@ -4,7 +4,7 @@
     rest_init/2,
     allowed_methods/2,
     content_types_provided/2,
-    %is_authorized/2,
+    is_authorized/2,
     resource_exists/2,
     delete_resource/2
 ]).
@@ -29,12 +29,8 @@ content_types_provided(Req, State) ->
     ],
     {Handlers, Req, State}.
 
-% TODO
-%is_authorized(Req, State) ->
-%    case http_auth:is_authorized_admin(Req, State) of
-%        ok -> {true, Req};
-%        Unauthorized -> Unauthorized
-%    end.
+is_authorized(Req, State) ->
+    http_auth:authorize_admin(Req, State).
 
 resource_exists(Req, State) ->
     {Token, _} = cowboy_req:binding(token, Req),

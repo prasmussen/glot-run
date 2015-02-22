@@ -5,7 +5,7 @@
     allowed_methods/2,
     content_types_accepted/2,
     content_types_provided/2,
-    %is_authorized/2,
+    is_authorized/2,
     list_tokens/2,
     accept_put/2
 ]).
@@ -35,11 +35,8 @@ content_types_provided(Req, State) ->
     ],
     {Handlers, Req, State}.
 
-%is_authorized(Req, State) ->
-%    case http_auth:is_authorized_admin(Req, State) of
-%        ok -> {true, Req};
-%        Unauthorized -> Unauthorized
-%    end.
+is_authorized(Req, State) ->
+    http_auth:authorize_admin(Req, State).
 
 list_tokens(Req, State) ->
     Tokens = token:list(),
