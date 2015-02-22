@@ -35,7 +35,7 @@ is_authorized(Req, State) ->
 resource_exists(Req, State) ->
     {Token, _} = cowboy_req:binding(token, Req),
 
-    case token:is_valid(Token) of
+    case user_token:is_valid(Token) of
         true ->
             {true, Req, State#state{token=Token}};
         false ->
@@ -43,5 +43,5 @@ resource_exists(Req, State) ->
     end.
 
 delete_resource(Req, State=#state{token=Token}) ->
-    token:delete(Token),
+    user_token:delete(Token),
     {true, Req, State}.

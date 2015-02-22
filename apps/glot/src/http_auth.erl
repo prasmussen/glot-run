@@ -10,10 +10,10 @@
 -define(WRONG_TOKEN, <<"Wrong auth token">>).
 
 authorize_admin(Req, State) ->
-    authorize(Req, State, fun token:is_valid_admin/1).
+    authorize(Req, State, fun admin_token:is_valid/1).
 
 authorize_user(Req, State) ->
-    authorize(Req, State, fun token:is_valid_user/1).
+    authorize(Req, State, fun user_token:is_valid/1).
 
 authorize(Req, State, ValidateFn) ->
     case cowboy_req:parse_header(<<"authorization">>, Req) of

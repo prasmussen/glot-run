@@ -39,7 +39,7 @@ is_authorized(Req, State) ->
     http_auth:authorize_admin(Req, State).
 
 list_tokens(Req, State) ->
-    Tokens = token:list(),
+    Tokens = user_token:list(),
     {jsx:encode(Tokens), Req, State}.
 
 accept_put(Req, State) ->
@@ -48,7 +48,7 @@ accept_put(Req, State) ->
 save_token(Data, Req, State) ->
     Token = proplists:get_value(<<"token">>, Data),
     lager:info("Token: ~p", [Token]),
-    token:save(Token),
+    user_token:save(Token),
     {true, Req, State}.
 
 decode_body(F, Req, State) ->
