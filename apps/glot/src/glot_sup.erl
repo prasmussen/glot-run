@@ -28,6 +28,7 @@ init([]) ->
 
     Children = [
         ?CHILD(docker_attach_sup, supervisor),
+        ?CHILD(log_srv, worker),
         ?CHILD(datastore, worker)
     ],
 

@@ -39,5 +39,8 @@ start_http_server() ->
             {ip, config:http_listen_ip()},
             {port, config:http_listen_port()}
         ],
-        [{env, [{dispatch, Dispatch}]}]
+        [
+            {env, [{dispatch, Dispatch}]},
+            {onresponse, fun http_util:log_response/4}
+        ]
     ).

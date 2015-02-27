@@ -17,6 +17,7 @@ init(_Transport, _Req, _Opts) ->
     {upgrade, protocol, cowboy_rest}.
 
 rest_init(Req, []) ->
+    http_util:log_request(Req),
     {ok, Req, #state{}}.
 
 allowed_methods(Req, State) ->
