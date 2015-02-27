@@ -10,20 +10,24 @@
     code_change/3,
     terminate/2,
 
-    log_http/1
+    log_http/1,
+    log_event/1
 ]).
 
 -record(state, {
-    http
+    http,
+    event
 }).
 
 start_link() ->
     gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 
 init([]) ->
-    Fname = config:http_log_path(),
-    {ok, Http} = file:open(Fname, [append, delayed_write, {encoding, utf8}]),
-    {ok, #state{http=Http}}.
+    HttpLog = config:http_log_path(),
+    EventLog = config:event_log_path(),
+    {ok, Http} = file:open(HttpLog, [append, delayed_write, {encoding, utf8}]),
+    {ok, Event} = file:open(EventLog, [append, delayed_write, {encoding, utf8}]),
+    {ok, #state{http=Http, event=Event}}.
 
 stop() ->
     gen_server:call(?MODULE, stop).
@@ -34,6 +38,9 @@ handle_call(_event, _From, State) ->
 handle_cast({http, Data}, State=#state{http=Http}) ->
     log_write(Http, Data),
     {noreply, State};
+handle_cast({event, Data}, State=#state{event=Event}) ->
+    log_write(Event, Data),
+    {noreply, State};
 handle_cast(_Event, State) ->
     {noreply, State}.
 
@@ -43,8 +50,9 @@ handle_info(_Event, State) ->
 code_change(_OldVsc, State, _Extra) ->
     {ok, State}.
 
-terminate(Reason, #state{http=Http}) ->
+terminate(Reason, #state{http=Http, event=Event}) ->
     file:close(Http),
+    file:close(Event),
     Reason.
 
 pid_to_binary(Pid) ->
@@ -60,3 +68,10 @@ log_http(Data) ->
         pid => pid_to_binary(self())
     },
     gen_server:cast(?MODULE, {http, Data2}).
+
+log_event(Data) ->
+    Data2 = Data#{
+        timestamp => iso8601:format(now()),
+        pid => pid_to_binary(self())
+    },
+    gen_server:cast(?MODULE, {event, Data2}).

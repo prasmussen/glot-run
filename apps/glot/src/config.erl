@@ -6,6 +6,7 @@
     http_listen_port/0,
     datastore_path/0,
     http_log_path/0,
+    event_log_path/0,
     admin_token/0,
     docker_api_url/0,
     docker_run_timeout/0
@@ -26,6 +27,9 @@ datastore_path() ->
 
 http_log_path() ->
     os:getenv("HTTP_LOG_PATH").
+
+event_log_path() ->
+    os:getenv("EVENT_LOG_PATH").
 
 admin_token() ->
     list_to_binary(os:getenv("ADMIN_TOKEN")).

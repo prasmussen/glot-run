@@ -49,7 +49,6 @@ allow_missing_post(Req, State) ->
     {false, Req, State}.
 
 resource_exists(Req, State) ->
-    lager:debug("Resource exists?"),
     {Lang, _} = cowboy_req:binding(language, Req),
     {Vsn, _} = cowboy_req:binding(version, Req),
 
@@ -64,7 +63,6 @@ accept_post(Req, State) ->
     http_util:decode_body(fun run_code/3, Req, State).
 
 run_code(Data, Req, State=#state{language=Lang, version=Vsn}) ->
-    lager:info("Data: ~p", [Data]),
     case language_run:run(Lang, Vsn, Data) of
         {ok, Res} ->
             {true, cowboy_req:set_resp_body(Res, Req), State};
