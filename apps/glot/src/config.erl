@@ -4,7 +4,8 @@
     environment/0,
     http_listen_ip/0,
     http_listen_port/0,
-    datastore_path/0,
+    languages_data_path/0,
+    tokens_data_path/0,
     http_log_path/0,
     event_log_path/0,
     admin_token/0,
@@ -22,14 +23,27 @@ http_listen_ip() ->
 http_listen_port() ->
     list_to_integer(os:getenv("API_HTTP_LISTEN_PORT")).
 
-datastore_path() ->
-    os:getenv("DATASTORE_PATH").
+data_path() ->
+    Path = os:getenv("DATA_PATH"),
+    filelib:ensure_dir(Path),
+    Path.
+
+log_path() ->
+    Path = os:getenv("LOG_PATH"),
+    filelib:ensure_dir(Path),
+    Path.
+
+languages_data_path() ->
+    filename:join(data_path(), "languages.data").
+
+tokens_data_path() ->
+    filename:join(data_path(), "tokens.data").
 
 http_log_path() ->
-    os:getenv("HTTP_LOG_PATH").
+    filename:join(log_path(), "http.log").
 
 event_log_path() ->
-    os:getenv("EVENT_LOG_PATH").
+    filename:join(log_path(), "event.log").
 
 admin_token() ->
     list_to_binary(os:getenv("ADMIN_TOKEN")).

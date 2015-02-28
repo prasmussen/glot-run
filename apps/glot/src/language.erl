@@ -18,34 +18,34 @@ identifier(Language, Version) ->
 
 save(Language, Version, Image) ->
     Id = identifier(Language, Version),
-    datastore:language_save(Id, {Language, Version, Image}).
+    language_srv:save(Id, {Language, Version, Image}).
 
 delete(Id) ->
-    datastore:language_delete(Id).
+    language_srv:delete(Id).
 
 get(Id) ->
-    {ok, {Lang, Vsn, Image}} = maps:find(Id, datastore:language_list()),
+    {ok, {Lang, Vsn, Image}} = maps:find(Id, language_srv:list()),
     {Id, Lang, Vsn, Image}.
 
 exists(Id) ->
-    maps:is_key(Id, datastore:language_list()).
+    maps:is_key(Id, language_srv:list()).
 
 is_supported(Language) ->
     lists:member(Language, list()).
 
 is_supported(Language, Version) ->
     Id = identifier(Language, Version),
-    maps:is_key(Id, datastore:language_list()).
+    maps:is_key(Id, language_srv:list()).
 
 list() ->
     maps:fold(fun(Id, {Lang, Vsn, Image}, Acc) ->
         [{Id, Lang, Vsn, Image}|Acc]
-    end, [], datastore:language_list()).
+    end, [], language_srv:list()).
 
 list_languages() ->
     Languages = maps:fold(fun(_, {Lang, _, _}, Acc) ->
         [Lang|Acc]
-    end, [], datastore:language_list()),
+    end, [], language_srv:list()),
     sort_and_remove_duplicates(Languages).
 
 list_versions(Language) ->
@@ -54,12 +54,12 @@ list_versions(Language) ->
             true -> [Vsn|Acc];
             false -> Acc
         end
-    end, [], datastore:language_list()),
+    end, [], language_srv:list()),
     sort_and_remove_duplicates(Versions).
 
 get_image(Language, Version) ->
     Id = identifier(Language, Version),
-    {ok, {_, _, Image}} = maps:find(Id, datastore:language_list()),
+    {ok, {_, _, Image}} = maps:find(Id, language_srv:list()),
     Image.
 
 sort_and_remove_duplicates(List) ->

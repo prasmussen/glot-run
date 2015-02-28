@@ -29,7 +29,8 @@ init([]) ->
     Children = [
         ?CHILD(docker_attach_sup, supervisor),
         ?CHILD(log_srv, worker),
-        ?CHILD(datastore, worker)
+        ?CHILD(language_srv, worker),
+        ?CHILD(token_srv, worker)
     ],
 
     {ok, {{one_for_one, MaxRestart, MaxTime}, Children}}.

@@ -9,14 +9,13 @@
 
 
 list() ->
-    sets:to_list(datastore:token_list()).
+    sets:to_list(token_srv:list()).
 
 save(Token) ->
-    datastore:token_save(Token).
+    token_srv:save(Token).
 
 delete(Token) ->
-    datastore:token_delete(Token).
+    token_srv:delete(Token).
 
 is_valid(Token) ->
-    Tokens = datastore:token_list(),
-    sets:is_element(Token, Tokens).
+    sets:is_element(Token, token_srv:list()).

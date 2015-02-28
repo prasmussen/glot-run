@@ -12,8 +12,7 @@
     lager,
     cowboy,
     jsx,
-    hackney,
-    eleveldb
+    hackney
   ]},
   {mod, { glot_app, []}},
   {env, []}

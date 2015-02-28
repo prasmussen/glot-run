@@ -40,8 +40,7 @@ applications() ->
         public_key,
         ssl,
         idna,
-        hackney,
-        eleveldb
+        hackney
     ].
 
 priv_dir() ->
