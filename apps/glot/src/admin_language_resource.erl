@@ -60,10 +60,10 @@ delete_resource(Req, State=#state{id=Id}) ->
     language:delete(Id),
     {true, Req, State}.
 
-language_tuple_to_map({Id, Language, Version, Image}) ->
+language_tuple_to_map({Id, Name, Version, Image}) ->
     #{
         id => Id,
-        language => Language,
+        name => Name,
         version => Version,
         image => Image
     }.

@@ -14,7 +14,7 @@
 -define(TIMEOUT_ERROR, <<"Code exceeded the maximum allowed running time">>).
 
 -record(state, {
-    language,
+    name,
     version
 }).
 
@@ -49,12 +49,12 @@ allow_missing_post(Req, State) ->
     {false, Req, State}.
 
 resource_exists(Req, State) ->
-    {Lang, _} = cowboy_req:binding(language, Req),
+    {Name, _} = cowboy_req:binding(name, Req),
     {Vsn, _} = cowboy_req:binding(version, Req),
 
-    case language:is_supported(Lang, Vsn) of
+    case language:is_supported(Name, Vsn) of
         true ->
-            {true, Req, State#state{language=Lang, version=Vsn}};
+            {true, Req, State#state{name=Name, version=Vsn}};
         false ->
             {false, Req, State}
     end.
@@ -62,8 +62,8 @@ resource_exists(Req, State) ->
 accept_post(Req, State) ->
     http_util:decode_body(fun run_code/3, Req, State).
 
-run_code(Data, Req, State=#state{language=Lang, version=Vsn}) ->
-    case language_run:run(Lang, Vsn, Data) of
+run_code(Data, Req, State=#state{name=Name, version=Vsn}) ->
+    case language_run:run(Name, Vsn, Data) of
         {ok, Res} ->
             {true, cowboy_req:set_resp_body(Res, Req), State};
         {error, timeout} ->

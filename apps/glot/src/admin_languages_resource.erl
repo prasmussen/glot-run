@@ -45,23 +45,22 @@ accept_put(Req, State) ->
     http_util:decode_body(fun save_language/3, Req, State).
 
 save_language(Data, Req, State) ->
-    lager:info("data: ~p", [Data]),
     % TODO: Ensure that all values are defined, i.e. not undefined
-    {Lang, Vsn, Image} = proplist_to_language_tuple(Data),
-    language:save(Lang, Vsn, Image),
+    {Name, Vsn, Image} = proplist_to_language_tuple(Data),
+    language:save(Name, Vsn, Image),
     {true, Req, State}.
 
-language_tuple_to_map({Id, Language, Version, Image}) ->
+language_tuple_to_map({Id, Name, Version, Image}) ->
     #{
         id => Id,
-        language => Language,
+        name => Name,
         version => Version,
         image => Image
     }.
 
 proplist_to_language_tuple(Data) ->
     {
-        proplists:get_value(<<"language">>, Data),
+        proplists:get_value(<<"name">>, Data),
         proplists:get_value(<<"version">>, Data),
         proplists:get_value(<<"image">>, Data)
     }.

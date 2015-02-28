@@ -6,59 +6,59 @@
     save/3,
     delete/1,
     list/0,
-    list_languages/0,
+    list_names/0,
     list_versions/1,
     get_image/2,
     is_supported/1,
     is_supported/2
 ]).
 
-identifier(Language, Version) ->
-    util:sha1(<<Language/binary, Version/binary>>).
+identifier(Name, Version) ->
+    util:sha1(<<Name/binary, Version/binary>>).
 
-save(Language, Version, Image) ->
-    Id = identifier(Language, Version),
-    language_srv:save(Id, {Language, Version, Image}).
+save(Name, Version, Image) ->
+    Id = identifier(Name, Version),
+    language_srv:save(Id, {Name, Version, Image}).
 
 delete(Id) ->
     language_srv:delete(Id).
 
 get(Id) ->
-    {ok, {Lang, Vsn, Image}} = maps:find(Id, language_srv:list()),
-    {Id, Lang, Vsn, Image}.
+    {ok, {Name, Vsn, Image}} = maps:find(Id, language_srv:list()),
+    {Id, Name, Vsn, Image}.
 
 exists(Id) ->
     maps:is_key(Id, language_srv:list()).
 
-is_supported(Language) ->
-    lists:member(Language, list()).
+is_supported(Name) ->
+    lists:member(Name, list_names()).
 
-is_supported(Language, Version) ->
-    Id = identifier(Language, Version),
+is_supported(Name, Version) ->
+    Id = identifier(Name, Version),
     maps:is_key(Id, language_srv:list()).
 
 list() ->
-    maps:fold(fun(Id, {Lang, Vsn, Image}, Acc) ->
-        [{Id, Lang, Vsn, Image}|Acc]
+    maps:fold(fun(Id, {Name, Vsn, Image}, Acc) ->
+        [{Id, Name, Vsn, Image}|Acc]
     end, [], language_srv:list()).
 
-list_languages() ->
-    Languages = maps:fold(fun(_, {Lang, _, _}, Acc) ->
-        [Lang|Acc]
+list_names() ->
+    Names = maps:fold(fun(_, {Name, _, _}, Acc) ->
+        [Name|Acc]
     end, [], language_srv:list()),
-    sort_and_remove_duplicates(Languages).
+    sort_and_remove_duplicates(Names).
 
-list_versions(Language) ->
-    Versions = maps:fold(fun(_, {Lang, Vsn, _}, Acc) ->
-        case Lang =:= Language of
+list_versions(Name) ->
+    Versions = maps:fold(fun(_, {LangName, Vsn, _}, Acc) ->
+        case LangName =:= Name of
             true -> [Vsn|Acc];
             false -> Acc
         end
     end, [], language_srv:list()),
     sort_and_remove_duplicates(Versions).
 
-get_image(Language, Version) ->
-    Id = identifier(Language, Version),
+get_image(Name, Version) ->
+    Id = identifier(Name, Version),
     {ok, {_, _, Image}} = maps:find(Id, language_srv:list()),
     Image.
 

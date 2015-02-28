@@ -9,7 +9,7 @@
 ]).
 
 -record(state, {
-    language
+    name
 }).
 
 init(_Transport, _Req, _Opts) ->
@@ -30,15 +30,15 @@ content_types_provided(Req, State) ->
     {Handlers, Req, State}.
 
 resource_exists(Req, State) ->
-    {Lang, _} = cowboy_req:binding(language, Req),
+    {Name, _} = cowboy_req:binding(name, Req),
 
-    case language:is_supported(Lang) of
+    case language:is_supported(Name) of
         true ->
-            {true, Req, State#state{language=Lang}};
+            {true, Req, State#state{name=Name}};
         false ->
             {false, Req, State}
     end.
 
-list_versions(Req, State=#state{language=Language}) ->
-    Versions = language:list_versions(Language),
+list_versions(Req, State=#state{name=Name}) ->
+    Versions = language:list_versions(Name),
     {jsx:encode(Versions), Req, State}.

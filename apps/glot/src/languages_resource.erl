@@ -4,7 +4,7 @@
     rest_init/2,
     allowed_methods/2,
     content_types_provided/2,
-    list_languages/2
+    list_names/2
 ]).
 
 init(_Transport, _Req, _Opts) ->
@@ -20,10 +20,10 @@ allowed_methods(Req, State) ->
 
 content_types_provided(Req, State) ->
     Handlers = [
-        {{<<"application">>, <<"json">>, '*'}, list_languages}
+        {{<<"application">>, <<"json">>, '*'}, list_names}
     ],
     {Handlers, Req, State}.
 
-list_languages(Req, State) ->
-    Languages = language:list(),
-    {jsx:encode(Languages), Req, State}.
+list_names(Req, State) ->
+    Names = language:list_names(),
+    {jsx:encode(Names), Req, State}.
