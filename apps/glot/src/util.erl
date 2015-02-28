@@ -1,7 +1,8 @@
 -module(util).
 
 -export([
-    sha1/1
+    sha1/1,
+    pid_to_binary/1
 ]).
 
 sha1(Data) ->
@@ -19,3 +20,6 @@ hexstring(<<X:384/big-unsigned-integer>>) ->
     iolist_to_binary(io_lib:format("~96.16.0b", [X]));
 hexstring(<<X:512/big-unsigned-integer>>) ->
     iolist_to_binary(io_lib:format("~128.16.0b", [X])).
+
+pid_to_binary(Pid) ->
+    list_to_binary(pid_to_list(Pid)).

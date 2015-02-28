@@ -1,9 +1,18 @@
 -module(log).
 -export([
-    event/1
+    http/1,
+    event/1,
+    write/2
 ]).
 
 event(Event) when is_list(Event) ->
     event(list_to_binary(Event));
 event(Event) ->
-    log_srv:log_event(#{event => Event}).
+    event_log_srv:append(#{event => Event}).
+
+http(Http) ->
+    http_log_srv:append(Http).
+
+write(File, Data) ->
+    Json = jsx:encode(Data),
+    file:write(File, <<Json/binary, "\n">>).

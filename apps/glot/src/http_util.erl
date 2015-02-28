@@ -14,7 +14,7 @@ log_request(Req) ->
     {Method, _} = cowboy_req:method(Req),
     {Path, _} = cowboy_req:path(Req),
     {{Ip, Port}, _} = cowboy_req:peer(Req),
-    log_srv:log_http(#{
+    log:http(#{
         peer => #{
             ip => list_to_binary(inet:ntoa(Ip)),
             port => Port
@@ -34,13 +34,13 @@ log_response_body(Body) ->
 log_body(<<>>, _) ->
     ok;
 log_body(Body, Type) ->
-    log_srv:log_http(#{
+    log:http(#{
         body => Body,
         type => Type
     }).
 
 log_response(Status, Headers, Body, Req) ->
-    log_srv:log_http(#{
+    log:http(#{
         status => Status,
         headers => format_headers(Headers),
         type => response
