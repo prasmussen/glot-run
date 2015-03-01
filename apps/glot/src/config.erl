@@ -10,7 +10,8 @@
     event_log_path/0,
     admin_token/0,
     docker_api_url/0,
-    docker_run_timeout/0
+    docker_run_timeout/0,
+    docker_container_config/1
 ]).
 
 environment() ->
@@ -53,3 +54,56 @@ docker_api_url() ->
 
 docker_run_timeout() ->
     list_to_integer(os:getenv("DOCKER_RUN_TIMEOUT")).
+
+docker_container_config(Image) ->
+    Config = default_docker_config(),
+    Config#{<<"Image">> => Image}.
+
+default_docker_config() ->
+    #{
+        <<"Hostname">> => <<"glot-runner">>,
+        <<"Domainname">> => <<"">>,
+        <<"User">> => <<"glot">>,
+        <<"AttachStdin">> => true,
+        <<"AttachStdout">> => true,
+        <<"AttachStderr">> => true,
+        <<"Tty">> => false,
+        <<"OpenStdin">> => true,
+        <<"StdinOnce">> => true,
+        <<"Env">> => null,
+        <<"Cmd">> => [<<"/home/glot/runner">>],
+        <<"Entrypoint">> => <<"">>,
+        <<"Image">> => <<"">>,
+        <<"Volumes">> => #{},
+        <<"WorkingDir">> => <<"">>,
+        <<"NetworkDisabled">> => true,
+        %<<"MacAddress">> => <<"12:34:56:78:9a:bc">>,
+        %<<"Memory">> => 0,
+        %<<"MemorySwap">> => 0,
+        %<<"CpuShares">> => 512,
+        %<<"Cpuset">> => <<"0">>,
+        <<"ExposedPorts">> => #{},
+        <<"SecurityOpts">> => [<<"">>],
+        <<"HostConfig">> => #{
+            <<"Binds">> => [],
+            <<"Links">> => [],
+            <<"LxcConf">> => #{
+                <<"lxc.utsname">> => <<"docker">>
+            },
+            <<"PortBindings">> => #{},
+            <<"PublishAllPorts">> => false,
+            <<"Privileged">> => false,
+            <<"Dns">> => [<<"8.8.8.8">>],
+            <<"DnsSearch">> => [<<"">>],
+            <<"ExtraHosts">> => null,
+            <<"VolumesFrom">> => [],
+            <<"CapAdd">> => [<<"NET_ADMIN">>],
+            <<"CapDrop">> => [<<"MKNOD">>],
+            <<"RestartPolicy">> => #{
+                <<"Name">> => <<"">>,
+                <<"MaximumRetryCount">> => 0
+            },
+            <<"NetworkMode">> => <<"bridge">>,
+            <<"Devices">> => []
+        }
+    }.
