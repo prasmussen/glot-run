@@ -1,2 +1,2 @@
 #!/bin/bash
-curl -sv localhost:8090/languages/
+curl -sv localhost:8090/languages/ | jq .
