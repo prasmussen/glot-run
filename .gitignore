@@ -16,4 +16,3 @@ Session.vim
 ._*
 env_prod.sh
 env_dev.sh
-scripts
