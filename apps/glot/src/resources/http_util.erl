@@ -23,7 +23,8 @@ log_request(Req) ->
         method => Method,
         path => Path,
         type => request
-    }).
+    }),
+    Req.
 
 log_request_body(Body) ->
     log_body(Body, request_body).

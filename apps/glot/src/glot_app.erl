@@ -41,6 +41,7 @@ start_http_server() ->
         ],
         [
             {env, [{dispatch, Dispatch}]},
+            {onrequest, fun http_util:log_request/1},
             {onresponse, fun http_util:log_response/4}
         ]
     ).
