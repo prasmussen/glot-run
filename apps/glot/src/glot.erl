@@ -40,7 +40,8 @@ applications() ->
         public_key,
         ssl,
         idna,
-        hackney
+        hackney,
+        iso8601
     ].
 
 priv_dir() ->
