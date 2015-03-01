@@ -28,7 +28,6 @@
 
 -record(state, {
     socket,
-    payload,
     callback_pid,
     buffer=[]
 }).
