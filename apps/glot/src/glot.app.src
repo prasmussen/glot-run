@@ -12,7 +12,8 @@
     lager,
     cowboy,
     jsx,
-    hackney
+    hackney,
+    iso8601
   ]},
   {mod, { glot_app, []}},
   {env, []}
