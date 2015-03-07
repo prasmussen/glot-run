@@ -29,8 +29,11 @@ container_start(Id) ->
     ok.
 
 container_remove(Id) ->
+    Url = docker_url:container_remove(config:docker_api_url(), Id, [
+        {v, true}, {force, true}
+    ]),
     {ok, 204, _, _} = hackney:delete(
-        docker_url:container_remove(config:docker_api_url(), Id),
+        Url,
         [{<<"Content-Type">>, <<"application/json">>}],
         <<"">>,
         []
