@@ -30,7 +30,7 @@ start_http_server() ->
             {"/admin/languages/:id", admin_language_resource, []},
             {"/languages", languages_resource, []},
             {"/languages/:name", language_resource, []},
-            {"/languages/:name/:version/run", language_run_resource, []}
+            {"/languages/:name/:version", language_run_resource, []}
         ]}
     ]),
 
