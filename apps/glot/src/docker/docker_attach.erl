@@ -46,7 +46,7 @@ ready({attach, ContainerId}, From, State) ->
     Port = Url#hackney_url.port,
     log:event([<<"Connect to ">>, list_to_binary(Host), <<":">>, integer_to_binary(Port)]),
     {ok, Socket} = gen_tcp:connect(Host, Port, [binary, {active, true}, {packet, line}, {keepalive, true}]),
-    gen_tcp:send(Socket, <<"POST /v1.7/containers/", ContainerId/binary, "/attach?stdin=1&stdout=1&stderr=1&stream=1 HTTP/1.1\r\nContent-Type: application/vnd.docker.raw-stream\r\n\r\n">>),
+    gen_tcp:send(Socket, <<"POST /v1.17/containers/", ContainerId/binary, "/attach?stdin=1&stdout=1&stderr=1&stream=1 HTTP/1.1\r\nContent-Type: application/vnd.docker.raw-stream\r\n\r\n">>),
     NewState = State#state{socket=Socket, callback_pid=From},
     log:event(<<"Transition to recv_http state">>),
     {next_state, recv_http, NewState}.
