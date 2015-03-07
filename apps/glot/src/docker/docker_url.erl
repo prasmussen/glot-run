@@ -3,7 +3,8 @@
 -export([
     container_create/1,
     container_start/2,
-    container_remove/2
+    container_remove/2,
+    container_attach/3
 ]).
 
 container_create(BaseUrl) ->
@@ -17,3 +18,6 @@ container_remove(BaseUrl, Id) ->
         {<<"v">>, <<"true">>},
         {<<"force">>, <<"true">>}
     ]).
+
+container_attach(BaseUrl, Id, Params) ->
+    hackney_url:make_url(BaseUrl, <<"/containers/", Id/binary, "/attach">>, Params).

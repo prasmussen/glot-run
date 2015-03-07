@@ -32,7 +32,6 @@
     buffer=[]
 }).
 
-
 start_link() ->
     gen_fsm:start_link(?MODULE, [], []).
 
@@ -41,12 +40,13 @@ init([]) ->
     {ok, ready, #state{}}.
 
 ready({attach, ContainerId}, From, State) ->
-    Url = hackney_url:parse_url(config:docker_api_url()),
-    Host = Url#hackney_url.host,
-    Port = Url#hackney_url.port,
+    ApiUrl = config:docker_api_url(),
+    #hackney_url{host=Host, port=Port} = hackney_url:parse_url(ApiUrl),
     log:event([<<"Connect to ">>, list_to_binary(Host), <<":">>, integer_to_binary(Port)]),
-    {ok, Socket} = gen_tcp:connect(Host, Port, [binary, {active, true}, {packet, line}, {keepalive, true}]),
-    gen_tcp:send(Socket, <<"POST /v1.17/containers/", ContainerId/binary, "/attach?stdin=1&stdout=1&stderr=1&stream=1 HTTP/1.1\r\nContent-Type: application/vnd.docker.raw-stream\r\nUpgrade: tcp\r\nConnection: Upgrade\r\n\r\n">>),
+    {ok, Socket} = gen_tcp:connect(Host, Port, [
+        binary, {active, true}, {packet, line}, {keepalive, true}
+    ]),
+    gen_tcp:send(Socket, raw_container_attach_request(ContainerId)),
     NewState = State#state{socket=Socket, callback_pid=From},
     log:event(<<"Transition to recv_http state">>),
     {next_state, recv_http, NewState}.
@@ -107,6 +107,18 @@ code_change(_OldVsn, StateName, State, _Extra) ->
 
 terminate(Reason, _StateName, _State) ->
     Reason.
+
+raw_container_attach_request(ContainerId) ->
+    Url = docker_url:container_attach(<<>>, ContainerId, [
+        {stdin, true}, {stdout, true}, {stream, true}
+    ]),
+    [
+        <<"POST ", Url/binary, " HTTP/1.1\r\n">>,
+        <<"Content-Type: application/vnd.docker.raw-stream\r\n">>,
+        <<"Connection: Upgrade\r\n">>,
+        <<"Upgrade: tcp\r\n">>,
+        <<"\r\n">>
+    ].
 
 parse_data(Data) ->
     parse_data(list_to_binary(lists:reverse(Data)), []).
