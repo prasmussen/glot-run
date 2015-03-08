@@ -25,9 +25,9 @@ content_types_provided(Req, State) ->
 root(Req, State) ->
     BaseUrl = config:base_url(),
     Data = #{
-        urls => [
-            <<BaseUrl/binary, "/admin/tokens">>,
-            <<BaseUrl/binary, "/admin/languages">>
-        ]
+        urls => #{
+            tokens => <<BaseUrl/binary, "/admin/tokens">>,
+            languages => <<BaseUrl/binary, "/admin/languages">>
+        }
     },
     {jsx:encode(Data), Req, State}.

@@ -27,10 +27,10 @@ root(Req, State) ->
     Data = #{
         description => config:glot_description(),
         version => config:glot_version(),
-        urls => [
-            <<BaseUrl/binary, "/admin">>,
-            <<BaseUrl/binary, "/languages">>
-        ]
+        urls => #{
+            admin => <<BaseUrl/binary, "/admin">>,
+            languages => <<BaseUrl/binary, "/languages">>
+        }
     },
     {jsx:encode(Data), Req, State}.
 
