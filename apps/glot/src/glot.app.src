@@ -1,5 +1,5 @@
 {application, glot, [
-  {description, "glot - Code runner api"},
+  {description, "glot - Code Runner API"},
   {vsn, "1.0.0"},
   {registered, []},
   {applications, [
