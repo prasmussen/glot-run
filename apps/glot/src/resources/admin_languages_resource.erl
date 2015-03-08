@@ -46,15 +46,19 @@ accept_put(Req, State) ->
 save_language(Data, Req, State) ->
     % TODO: Ensure that all values are defined, i.e. not undefined
     {Name, Vsn, Image} = proplist_to_language_tuple(Data),
-    language:save(Name, Vsn, Image),
-    {true, Req, State}.
+    Id = language:save(Name, Vsn, Image),
+    LanguageMap = language_tuple_to_map(language:get(Id)),
+    Req2 = cowboy_req:set_resp_body(jsx:encode(LanguageMap), Req),
+    {true, Req2, State}.
 
 language_tuple_to_map({Id, Name, Version, Image}) ->
+    BaseUrl = config:base_url(),
     #{
         id => Id,
         name => Name,
         version => Version,
-        image => Image
+        image => Image,
+        url => <<BaseUrl/binary, "/admin/languages/", Id/binary>>
     }.
 
 proplist_to_language_tuple(Data) ->

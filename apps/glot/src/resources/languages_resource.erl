@@ -24,5 +24,12 @@ content_types_provided(Req, State) ->
     {Handlers, Req, State}.
 
 list_names(Req, State) ->
-    Names = language:list_names(),
+    Names = [format_language(X) || X <- language:list_names()],
     {jsx:encode(Names), Req, State}.
+
+format_language(Name) ->
+    BaseUrl = config:base_url(),
+    #{
+        name => Name,
+        url => <<BaseUrl/binary, "/languages/", Name/binary>>
+    }.

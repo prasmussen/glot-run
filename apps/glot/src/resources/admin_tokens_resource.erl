@@ -37,14 +37,23 @@ is_authorized(Req, State) ->
     http_auth:authorize_admin(Req, State).
 
 list_tokens(Req, State) ->
-    Tokens = user_token:list(),
+    Tokens = [token_tuple_to_map(X) || X <- user_token:list()],
     {jsx:encode(Tokens), Req, State}.
 
 accept_put(Req, State) ->
     http_util:decode_body(fun save_token/3, Req, State).
 
 save_token(Data, Req, State) ->
-    Token = proplists:get_value(<<"token">>, Data),
-    lager:info("Token: ~p", [Token]),
-    user_token:save(Token),
-    {true, Req, State}.
+    TokenValue = proplists:get_value(<<"token">>, Data),
+    Id = user_token:save(TokenValue),
+    TokenMap = token_tuple_to_map(user_token:get(Id)),
+    Req2 = cowboy_req:set_resp_body(jsx:encode(TokenMap), Req),
+    {true, Req2, State}.
+
+token_tuple_to_map({Id, Token}) ->
+    BaseUrl = config:base_url(),
+    #{
+        id => Id,
+        token => Token,
+        url => <<BaseUrl/binary, "/admin/tokens/", Id/binary>>
+    }.

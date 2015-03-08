@@ -10,7 +10,7 @@
 ]).
 
 -record(state, {
-    token
+    id
 }).
 
 init(_Transport, _Req, _Opts) ->
@@ -33,15 +33,15 @@ is_authorized(Req, State) ->
     http_auth:authorize_admin(Req, State).
 
 resource_exists(Req, State) ->
-    {Token, _} = cowboy_req:binding(token, Req),
+    {Id, _} = cowboy_req:binding(id, Req),
 
-    case user_token:is_valid(Token) of
+    case user_token:exists(Id) of
         true ->
-            {true, Req, State#state{token=Token}};
+            {true, Req, State#state{id=Id}};
         false ->
             {false, Req, State}
     end.
 
-delete_resource(Req, State=#state{token=Token}) ->
-    user_token:delete(Token),
+delete_resource(Req, State=#state{id=Id}) ->
+    user_token:delete(Id),
     {true, Req, State}.

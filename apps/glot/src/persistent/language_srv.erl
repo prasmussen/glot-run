@@ -36,7 +36,7 @@ handle_call({list}, _, State=#state{languages=Langs}) ->
 handle_call({save, Id, Language}, _, State=#state{languages=Langs, filename=Fname}) ->
     NewLangs = maps:put(Id, Language, Langs),
     ok = persist:save(Fname, NewLangs),
-    {reply, ok, State#state{languages=NewLangs}};
+    {reply, Id, State#state{languages=NewLangs}};
 handle_call({delete, Id}, _, State=#state{languages=Langs, filename=Fname}) ->
     NewLangs = maps:remove(Id, Langs),
     ok = persist:save(Fname, NewLangs),

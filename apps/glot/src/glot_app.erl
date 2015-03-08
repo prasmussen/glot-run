@@ -24,8 +24,10 @@ stop(_State) ->
 start_http_server() ->
     Dispatch = cowboy_router:compile([
         {'_', [
+            {"/", root_resource, []},
+            {"/admin", admin_root_resource, []},
             {"/admin/tokens", admin_tokens_resource, []},
-            {"/admin/tokens/:token", admin_token_resource, []},
+            {"/admin/tokens/:id", admin_token_resource, []},
             {"/admin/languages", admin_languages_resource, []},
             {"/admin/languages/:id", admin_language_resource, []},
             {"/languages", languages_resource, []},

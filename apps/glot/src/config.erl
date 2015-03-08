@@ -2,12 +2,15 @@
 
 -export([
     environment/0,
+    glot_version/0,
+    glot_description/0,
     http_listen_ip/0,
     http_listen_port/0,
     languages_data_path/0,
     tokens_data_path/0,
     http_log_path/0,
     event_log_path/0,
+    base_url/0,
     admin_token/0,
     docker_api_url/0,
     docker_run_timeout/0,
@@ -16,6 +19,14 @@
 
 environment() ->
     list_to_atom(os:getenv("API_ENVIRONMENT")).
+
+glot_version() ->
+    {ok, Vsn} = application:get_key(glot, vsn),
+    list_to_binary(Vsn).
+
+glot_description() ->
+    {ok, Desc} = application:get_key(glot, description),
+    list_to_binary(Desc).
 
 http_listen_ip() ->
     {ok, Addr} = inet:parse_address(os:getenv("API_HTTP_LISTEN_IP")),
@@ -45,6 +56,9 @@ http_log_path() ->
 
 event_log_path() ->
     filename:join(log_path(), "event.log").
+
+base_url() ->
+    list_to_binary(os:getenv("BASE_URL")).
 
 admin_token() ->
     list_to_binary(os:getenv("ADMIN_TOKEN")).

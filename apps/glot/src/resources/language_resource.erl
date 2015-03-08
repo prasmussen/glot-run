@@ -39,5 +39,12 @@ resource_exists(Req, State) ->
     end.
 
 list_versions(Req, State=#state{name=Name}) ->
-    Versions = language:list_versions(Name),
+    Versions = [format_version(Name, X) || X <- language:list_versions(Name)],
     {jsx:encode(Versions), Req, State}.
+
+format_version(Name, Version) ->
+    BaseUrl = config:base_url(),
+    #{
+        version => Version,
+        url => <<BaseUrl/binary, "/languages/", Name/binary, "/", Version/binary>>
+    }.

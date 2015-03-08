@@ -1,21 +1,34 @@
 -module(user_token).
 
 -export([
+    get/1,
     list/0,
     save/1,
     delete/1,
+    exists/1,
     is_valid/1
 ]).
 
+identifier(Token) ->
+    util:sha1(Token).
+
+get(Id) ->
+    {ok, Token} = maps:find(Id, token_srv:list()),
+    {Id, Token}.
 
 list() ->
-    sets:to_list(token_srv:list()).
+    maps:to_list(token_srv:list()).
 
 save(Token) ->
-    token_srv:save(Token).
+    Id = identifier(Token),
+    token_srv:save(Id, Token).
 
-delete(Token) ->
-    token_srv:delete(Token).
+delete(Id) ->
+    token_srv:delete(Id).
+
+exists(Id) ->
+    maps:is_key(Id, token_srv:list()).
 
 is_valid(Token) ->
-    sets:is_element(Token, token_srv:list()).
+    Id = identifier(Token),
+    maps:is_key(Id, token_srv:list()).

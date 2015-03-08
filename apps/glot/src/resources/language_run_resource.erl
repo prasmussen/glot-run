@@ -26,7 +26,7 @@ rest_init(Req, []) ->
     {ok, Req, #state{}}.
 
 allowed_methods(Req, State) ->
-    Methods = [<<"GET">>, <<"POST">>],
+    Methods = [<<"POST">>],
     {Methods, Req, State}.
 
 content_types_accepted(Req, State) ->

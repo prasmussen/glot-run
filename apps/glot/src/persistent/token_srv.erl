@@ -11,7 +11,7 @@
     terminate/2,
 
     list/0,
-    save/1,
+    save/2,
     delete/1
 ]).
 
@@ -25,7 +25,7 @@ start_link() ->
 
 init([]) ->
     Fname = config:tokens_data_path(),
-    {ok, Tokens} = persist:load(Fname, sets:new()),
+    {ok, Tokens} = persist:load(Fname, maps:new()),
     {ok, #state{filename=Fname, tokens=Tokens}}.
 
 stop() ->
@@ -33,12 +33,12 @@ stop() ->
 
 handle_call({list}, _, State=#state{tokens=Tokens}) ->
     {reply, Tokens, State};
-handle_call({save, Token}, _, State=#state{tokens=Tokens, filename=Fname}) ->
-    NewTokens = sets:add_element(Token, Tokens),
+handle_call({save, Id, Token}, _, State=#state{tokens=Tokens, filename=Fname}) ->
+    NewTokens = maps:put(Id, Token, Tokens),
     ok = persist:save(Fname, NewTokens),
-    {reply, ok, State#state{tokens=NewTokens}};
-handle_call({delete, Token}, _, State=#state{tokens=Tokens, filename=Fname}) ->
-    NewTokens = sets:del_element(Token, Tokens),
+    {reply, Id, State#state{tokens=NewTokens}};
+handle_call({delete, Id}, _, State=#state{tokens=Tokens, filename=Fname}) ->
+    NewTokens = maps:remove(Id, Tokens),
     ok = persist:save(Fname, NewTokens),
     {reply, ok, State#state{tokens=NewTokens}};
 handle_call(_Event, _From, State) ->
@@ -59,8 +59,8 @@ terminate(Reason, _State) ->
 list() ->
     gen_server:call(?MODULE, {list}).
 
-save(Token) ->
-    gen_server:call(?MODULE, {save, Token}).
+save(Id, Token) ->
+    gen_server:call(?MODULE, {save, Id, Token}).
 
 delete(Token) ->
     gen_server:call(?MODULE, {delete, Token}).
