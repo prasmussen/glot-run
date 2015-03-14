@@ -16,4 +16,4 @@ Session.vim
 ._*
 env_prod.sh
 env_dev.sh
-api.glot.io
+scripts/run.glot.io
