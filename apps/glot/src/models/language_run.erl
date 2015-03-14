@@ -18,8 +18,7 @@ run(Language, Version, Files) ->
     Payload = prepare_payload(Language, Files),
     log:event([<<"Send payload to ">>, ContainerId, <<" via ">>, util:pid_to_binary(Pid)]),
     Res = docker:container_send(Pid, Payload),
-    cancel_timer(DetachRef),
-    cancel_timer(RemoveRef),
+    [cancel_timer(X) || X <- [DetachRef, RemoveRef]],
     log:event(<<"Remove container ", ContainerId/binary>>),
     docker:container_remove(ContainerId),
     Res.
