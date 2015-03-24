@@ -7,7 +7,7 @@
     http_listen_ip/0,
     http_listen_port/0,
     languages_data_path/0,
-    tokens_data_path/0,
+    users_data_path/0,
     http_log_path/0,
     event_log_path/0,
     base_url/0,
@@ -48,8 +48,8 @@ log_path() ->
 languages_data_path() ->
     filename:join(data_path(), "languages.data").
 
-tokens_data_path() ->
-    filename:join(data_path(), "tokens.data").
+users_data_path() ->
+    filename:join(data_path(), "users.data").
 
 http_log_path() ->
     filename:join(log_path(), "http.log").

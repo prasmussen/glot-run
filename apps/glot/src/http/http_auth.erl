@@ -13,7 +13,7 @@ authorize_admin(Req, State) ->
     authorize(Req, State, fun admin_token:is_valid/1).
 
 authorize_user(Req, State) ->
-    authorize(Req, State, fun user_token:is_valid/1).
+    authorize(Req, State, fun users:valid_token/1).
 
 authorize(Req, State, ValidateFn) ->
     case cowboy_req:parse_header(<<"authorization">>, Req) of

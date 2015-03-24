@@ -26,8 +26,8 @@ start_http_server() ->
         {'_', [
             {"/", root_resource, []},
             {"/admin", admin_root_resource, []},
-            {"/admin/tokens", admin_tokens_resource, []},
-            {"/admin/tokens/:id", admin_token_resource, []},
+            {"/admin/users", admin_users_resource, []},
+            {"/admin/users/:id", admin_user_resource, []},
             {"/admin/languages", admin_languages_resource, []},
             {"/admin/languages/:id", admin_language_resource, []},
             {"/languages", languages_resource, []},

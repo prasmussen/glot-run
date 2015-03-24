@@ -31,7 +31,7 @@ init([]) ->
         ?CHILD(http_log_srv, worker),
         ?CHILD(event_log_srv, worker),
         ?CHILD(language_srv, worker),
-        ?CHILD(token_srv, worker)
+        ?CHILD(user_srv, worker)
     ],
 
     {ok, {{one_for_one, MaxRestart, MaxTime}, Children}}.
