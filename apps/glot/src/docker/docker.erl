@@ -14,7 +14,7 @@ container_create(Configuration) ->
         docker_url:container_create(config:docker_api_url()),
         [{<<"Content-Type">>, <<"application/json">>}],
         jsx:encode(Configuration),
-        []
+        [{pool, default}]
     ),
     {ok, Data} = hackney:body(Client),
     proplists:get_value(<<"Id">>, jsx:decode(Data)).
@@ -24,7 +24,7 @@ container_start(Id) ->
         docker_url:container_start(config:docker_api_url(), Id),
         [{<<"Content-Type">>, <<"application/json">>}],
         <<"">>,
-        []
+        [{pool, default}]
     ),
     ok.
 
@@ -36,7 +36,7 @@ container_remove(Id) ->
         Url,
         [{<<"Content-Type">>, <<"application/json">>}],
         <<"">>,
-        []
+        [{pool, default}]
     ),
     ok.
 
