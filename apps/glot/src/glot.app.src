@@ -13,7 +13,8 @@
     cowboy,
     jsx,
     hackney,
-    iso8601
+    iso8601,
+    uuid
   ]},
   {mod, { glot_app, []}},
   {env, []}
