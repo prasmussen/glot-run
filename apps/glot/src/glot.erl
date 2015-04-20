@@ -41,7 +41,9 @@ applications() ->
         ssl,
         idna,
         hackney,
-        iso8601
+        iso8601,
+        quickrand,
+        uuid
     ].
 
 priv_dir() ->
