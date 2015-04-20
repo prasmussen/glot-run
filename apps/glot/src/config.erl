@@ -118,6 +118,10 @@ default_docker_config() ->
                 <<"MaximumRetryCount">> => 0
             },
             <<"NetworkMode">> => <<"bridge">>,
-            <<"Devices">> => []
+            <<"Devices">> => [],
+            <<"Ulimits">> => [
+                #{<<"Name">> => <<"nofile">>, <<"Soft">> => 80, <<"Hard">> => 100},
+                #{<<"Name">> => <<"nproc">>, <<"Soft">> => 80, <<"Hard">> => 100}
+            ]
         }
     }.
