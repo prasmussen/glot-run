@@ -21,6 +21,7 @@ run(Language, Version, Files) ->
     [cancel_timer(X) || X <- [DetachRef, RemoveRef]],
     log:event(<<"Remove container ", ContainerId/binary>>),
     docker:container_remove(ContainerId),
+    log:event(<<"Returning result">>),
     Res.
 
 remove_after(Seconds, ContainerId) ->

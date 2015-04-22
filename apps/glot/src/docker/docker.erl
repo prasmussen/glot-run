@@ -20,24 +20,26 @@ container_create(Configuration) ->
     proplists:get_value(<<"Id">>, jsx:decode(Data)).
 
 container_start(Id) ->
-    {ok, 204, _, _} = hackney:post(
+    {ok, 204, _, Client} = hackney:post(
         docker_url:container_start(config:docker_api_url(), Id),
         [{<<"Content-Type">>, <<"application/json">>}],
         <<"">>,
         [{pool, default}]
     ),
+    hackney:skip_body(Client),
     ok.
 
 container_remove(Id) ->
     Url = docker_url:container_remove(config:docker_api_url(), Id, [
         {v, true}, {force, true}
     ]),
-    {ok, 204, _, _} = hackney:delete(
+    {ok, 204, _, Client} = hackney:delete(
         Url,
         [{<<"Content-Type">>, <<"application/json">>}],
         <<"">>,
         [{pool, default}]
     ),
+    hackney:skip_body(Client),
     ok.
 
 container_attach(Id) ->
