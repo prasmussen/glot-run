@@ -120,8 +120,8 @@ default_docker_config() ->
             <<"NetworkMode">> => <<"bridge">>,
             <<"Devices">> => [],
             <<"Ulimits">> => [
-                #{<<"Name">> => <<"nofile">>, <<"Soft">> => 80, <<"Hard">> => 100},
-                #{<<"Name">> => <<"nproc">>, <<"Soft">> => 80, <<"Hard">> => 100}
+                #{<<"Name">> => <<"nofile">>, <<"Soft">> => 40, <<"Hard">> => 50},
+                #{<<"Name">> => <<"nproc">>, <<"Soft">> => 20, <<"Hard">> => 30}
             ]
         }
     }.
