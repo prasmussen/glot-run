@@ -31,13 +31,13 @@ All vars needs to be set, no default values are provided.
 
 ## Api users
 An api token is required to run code. Users can be created with the `/admin/users` endpoint.
-See the api docs for more details.
+See the [api docs](https://github.com/prasmussen/glot-run/tree/master/api_docs/admin) for more details.
 
 ## Languages
 Languages can be added with the `/admin/languages` endpoint. A language has
 a name, version and the name of a docker image that will be used when running
 code for the given language/version.
-See the api docs for more details.
+See the [api docs](https://github.com/prasmussen/glot-run/tree/master/api_docs/admin) for more details.
 
 ## Docker images
 When a run request is posted to glot-run it will create a new temporary container from
