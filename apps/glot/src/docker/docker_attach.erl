@@ -29,7 +29,8 @@
 -record(state, {
     socket,
     callback_pid,
-    buffer=[]
+    buffer=[],
+    buffer_size=0
 }).
 
 start_link() ->
@@ -87,9 +88,19 @@ handle_sync_event(_Event, _From, StateName, State) ->
     {next_state, StateName, State}.
 
 % Handle incoming data from socket
-handle_info({tcp, _Socket, Data}, StateName, State) ->
-    gen_fsm:send_event(self(), Data),
-    {next_state, StateName, State};
+handle_info({tcp, Socket, Data}, StateName, State=#state{callback_pid=From, buffer_size=Size}) ->
+    NewSize = Size + byte_size(Data),
+    case NewSize > config:max_output_size() of
+        false ->
+            gen_fsm:send_event(self(), Data),
+            {next_state, StateName, State#state{buffer_size=NewSize}};
+        true ->
+            log:event(<<"Reply with max size error">>),
+            gen_fsm:reply(From, {error, max_output_size}),
+            gen_tcp:close(Socket),
+            log:event(<<"Stop normal">>),
+            {stop, normal, State}
+    end;
 handle_info({tcp_closed, _}, _StateName, State=#state{callback_pid=From, buffer=Buffer}) ->
     log:event(<<"Socket closed">>),
     Data = parse_data(Buffer),

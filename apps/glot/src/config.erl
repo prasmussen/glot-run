@@ -12,6 +12,7 @@
     event_log_path/0,
     base_url/0,
     admin_token/0,
+    max_output_size/0,
     docker_api_url/0,
     docker_run_timeout/0,
     docker_container_config/1
@@ -62,6 +63,9 @@ base_url() ->
 
 admin_token() ->
     list_to_binary(os:getenv("ADMIN_TOKEN")).
+
+max_output_size() ->
+    list_to_integer(os:getenv("MAX_OUTPUT_SIZE")).
 
 docker_api_url() ->
     list_to_binary(os:getenv("DOCKER_API_URL")).

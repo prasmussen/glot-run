@@ -12,6 +12,7 @@
 ]).
 
 -define(TIMEOUT_ERROR, <<"Code exceeded the maximum allowed running time">>).
+-define(MAX_OUTPUT_SIZE_ERROR, <<"Output exceeded the maximum allowed size">>).
 
 -record(state, {
     name,
@@ -67,6 +68,9 @@ run_code(Data, Req, State=#state{name=Name, version=Vsn}) ->
             {true, cowboy_req:set_resp_body(Res, Req), State};
         {error, timeout} ->
             Res = jsx:encode(#{<<"message">> => ?TIMEOUT_ERROR}),
+            {false, cowboy_req:set_resp_body(Res, Req), State};
+        {error, max_output_size} ->
+            Res = jsx:encode(#{<<"message">> => ?MAX_OUTPUT_SIZE_ERROR}),
             {false, cowboy_req:set_resp_body(Res, Req), State};
         {error, Msg} ->
             Res = jsx:encode(#{<<"message">> => Msg}),
