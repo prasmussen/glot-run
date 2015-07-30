@@ -4,7 +4,7 @@
     run/3
 ]).
 
-run(Language, Version, Files) ->
+run(Language, Version, Data) ->
     Image = language:get_image(Language, Version),
     Config = config:docker_container_config(Image),
     log:event(<<"Create container from image ", Image/binary>>),
@@ -15,7 +15,7 @@ run(Language, Version, Files) ->
     log:event(<<"Attach container ", ContainerId/binary>>),
     Pid = docker:container_attach(ContainerId),
     DetachRef = detach_timeout_after(config:docker_run_timeout(), Pid),
-    Payload = prepare_payload(Language, Files),
+    Payload = prepare_payload(Language, Data),
     log:event([<<"Send payload to ">>, ContainerId, <<" via ">>, util:pid_to_binary(Pid)]),
     Res = docker:container_send(Pid, Payload),
     [cancel_timer(X) || X <- [DetachRef, RemoveRef]],
@@ -45,8 +45,9 @@ detach_timeout_after(Seconds, Pid) ->
 cancel_timer(Ref) ->
     timer:cancel(Ref).
 
-prepare_payload(Language, Files) ->
+prepare_payload(Language, Data) ->
     jsx:encode(#{
         <<"language">> => Language,
-        <<"files">> => Files
+        <<"files">> => proplists:get_value(<<"files">>, Data, []),
+        <<"command">> => proplists:get_value(<<"command">>, Data, <<"">>)
     }).

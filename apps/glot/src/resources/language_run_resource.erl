@@ -11,6 +11,8 @@
     accept_post/2
 ]).
 
+-define(MISSING_FILES, <<"Missing files">>).
+-define(INCOMPLETE_FILE, <<"One or more files are incomplete">>).
 -define(TIMEOUT_ERROR, <<"Code exceeded the maximum allowed running time">>).
 -define(MAX_OUTPUT_SIZE_ERROR, <<"Output exceeded the maximum allowed size">>).
 
@@ -60,7 +62,36 @@ resource_exists(Req, State) ->
     end.
 
 accept_post(Req, State) ->
-    http_util:decode_body(fun run_code/3, Req, State).
+    http_util:decode_body(fun validate_and_run_code/3, Req, State).
+
+validate_and_run_code(Data, Req, State) ->
+    case validate_files(Data) of
+        ok ->
+            run_code(Data, Req, State);
+        {error, missing_files} ->
+            Res = jsx:encode(#{<<"message">> => ?MISSING_FILES}),
+            {false, cowboy_req:set_resp_body(Res, Req), State};
+        {error, incomplete_file} ->
+            Res = jsx:encode(#{<<"message">> => ?INCOMPLETE_FILE}),
+            {false, cowboy_req:set_resp_body(Res, Req), State}
+    end.
+
+validate_files(Data) ->
+    case proplists:get_value(<<"files">>, Data, []) of
+        [] -> {error, missing_files};
+        Files -> ensure_complete_files(Files)
+    end.
+
+ensure_complete_files(Files) ->
+    Incomplete = lists:any(fun(File) ->
+        Name = proplists:get_value(<<"name">>, File, missing),
+        Content = proplists:get_value(<<"content">>, File, missing),
+        Name =:= missing orelse Content =:= missing
+    end, Files),
+    case Incomplete of
+        true -> {error, incomplete_file};
+        false -> ok
+    end.
 
 run_code(Data, Req, State=#state{name=Name, version=Vsn}) ->
     case language_run:run(Name, Vsn, Data) of
