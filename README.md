@@ -48,7 +48,7 @@ An application that does this is [glot-code-runner](https://github.com/prasmusse
 Example images can be found [here](https://github.com/prasmussen/glot-containers).
 
 ### Container payload
-The payload `[{"name": "main.py", "content": "print(42)"}]` posted to
+The payload `{"files": [{"name": "main.py", "content": "print(42)"}]}` posted to
 `/languages/python/latest` will result in this payload being sent to the
 container: `{"language": "python", "files": [{"name": "main.py", "content": "print(42)"}]}`.
 A successful run should yield this response from the container: `{"stdout": "42\n", "stderr": "", "error": ""}`.
