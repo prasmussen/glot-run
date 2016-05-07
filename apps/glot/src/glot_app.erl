@@ -30,6 +30,7 @@ start_http_server() ->
             {"/admin/users/:id", admin_user_resource, []},
             {"/admin/languages", admin_languages_resource, []},
             {"/admin/languages/:id", admin_language_resource, []},
+            {"/images", images_resource, []},
             {"/languages", languages_resource, []},
             {"/languages/:name", language_resource, []},
             {"/languages/:name/:version", language_run_resource, []}

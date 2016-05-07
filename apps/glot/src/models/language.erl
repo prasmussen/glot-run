@@ -7,6 +7,7 @@
     delete/1,
     list/0,
     list_names/0,
+    list_images/0,
     list_versions/1,
     get_image/2,
     is_supported/1,
@@ -47,6 +48,12 @@ list_names() ->
         [Name|Acc]
     end, [], language_srv:list()),
     sort_and_remove_duplicates(Names).
+
+list_images() ->
+    Images = maps:fold(fun(_, {_, _, Image}, Acc) ->
+        [Image|Acc]
+    end, [], language_srv:list()),
+    sort_and_remove_duplicates(Images).
 
 list_versions(Name) ->
     Versions = maps:fold(fun(_, {LangName, Vsn, _}, Acc) ->

@@ -29,6 +29,7 @@ root(Req, State) ->
         version => config:glot_version(),
         urls => #{
             admin => <<BaseUrl/binary, "/admin">>,
+            images => <<BaseUrl/binary, "/images">>,
             languages => <<BaseUrl/binary, "/languages">>
         }
     },
