@@ -1,6 +1,6 @@
 {application, glot, [
   {description, "glot - Code Runner API"},
-  {vsn, "1.0.0"},
+  {vsn, "1.1.0"},
   {registered, []},
   {applications, [
     kernel,
