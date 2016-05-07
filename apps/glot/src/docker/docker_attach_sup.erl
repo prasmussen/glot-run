@@ -13,8 +13,8 @@ start_link() ->
     supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 init([]) ->
-    MaxRestart = 100,
-    MaxTime = 10,
+    MaxRestart = 1200,
+    MaxTime = 60,
     Spec = {
         docker_attach,
         {docker_attach, start_link, []},
