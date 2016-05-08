@@ -17,6 +17,8 @@
       ]
     }
 
+Note: the first file in the array will be the one executed. The rest of the files can be supporting files, such as
+modules the first file uses.
 
 ### Example response data
     {
