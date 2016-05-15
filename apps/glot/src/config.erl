@@ -96,7 +96,7 @@ default_docker_config() ->
         <<"WorkingDir">> => <<"">>,
         <<"NetworkDisabled">> => true,
         %<<"MacAddress">> => <<"12:34:56:78:9a:bc">>,
-        %<<"Memory">> => 0,
+        <<"Memory">> => 500000000,
         %<<"MemorySwap">> => 0,
         %<<"CpuShares">> => 512,
         %<<"Cpuset">> => <<"0">>,
