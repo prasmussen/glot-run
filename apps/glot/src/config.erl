@@ -101,7 +101,7 @@ default_docker_config() ->
         %<<"CpuShares">> => 512,
         %<<"Cpuset">> => <<"0">>,
         <<"ExposedPorts">> => #{},
-        <<"SecurityOpt">> => null,
+        %<<"SecurityOpt">> => null,
         <<"HostConfig">> => #{
             <<"Binds">> => [],
             <<"Links">> => [],
