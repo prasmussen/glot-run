@@ -18,3 +18,4 @@ env_prod.sh
 env_dev.sh
 scripts/run.glot.io
 _rel_start.sh
+scripts
