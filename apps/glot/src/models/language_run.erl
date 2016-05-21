@@ -49,5 +49,6 @@ prepare_payload(Language, Data) ->
     jsx:encode(#{
         <<"language">> => Language,
         <<"files">> => proplists:get_value(<<"files">>, Data, []),
+        <<"stdin">> => proplists:get_value(<<"stdin">>, Data, <<"">>),
         <<"command">> => proplists:get_value(<<"command">>, Data, <<"">>)
     }).
