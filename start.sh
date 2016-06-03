@@ -11,4 +11,4 @@ export DOCKER_RUN_TIMEOUT="15"
 export MAX_OUTPUT_SIZE="500000"
 
 cd `dirname $0`
-exec erl -pa $PWD/apps/*/ebin $PWD/deps/*/ebin -s glot
+rebar3 shell --apps glot
