@@ -1,0 +1,9 @@
+
+language: bash
+services: docker
+
+script:
+  - docker build --no-cache -t glot/run:travisci .
+
+after_script:
+  - docker images
