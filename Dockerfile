@@ -1,7 +1,7 @@
 FROM alpine
 MAINTAINER javiertitan@gmail.com
 
-COPY . /glot-snippets/
+COPY . /glot-run/
 
 RUN export DEPS="\
 	git \
