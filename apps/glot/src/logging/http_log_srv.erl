@@ -49,7 +49,7 @@ terminate(Reason, #state{file=File}) ->
 
 append(Data) ->
     Data2 = Data#{
-        timestamp => iso8601:format(now()),
+        timestamp => iso8601:format(os:timestamp()),
         pid => util:pid_to_binary(self())
     },
     gen_server:cast(?MODULE, {append, Data2}).

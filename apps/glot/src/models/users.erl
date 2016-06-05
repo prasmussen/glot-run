@@ -36,7 +36,7 @@ delete(Id) ->
     user_srv:delete(Id).
 
 prepare_save(Data) ->
-    Now = iso8601:format(now()),
+    Now = iso8601:format(os:timestamp()),
     Data#{
         id => identifier(),
         created => Now,
@@ -45,7 +45,7 @@ prepare_save(Data) ->
 
 prepare_update(OldUser, NewUser) ->
     User = maps:merge(OldUser, NewUser),
-    Now = iso8601:format(now()),
+    Now = iso8601:format(os:timestamp()),
     User#{
         modified := Now
     }.
