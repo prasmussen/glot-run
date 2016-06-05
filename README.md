@@ -24,8 +24,8 @@ All vars needs to be set, no default values are provided.
 | BASE_URL             | &lt;url&gt;                   | https://run.glot.io | Base url to where the api is hosted                           |
 | ADMIN_TOKEN          | &lt;string&gt;                | some-secret         | Admin token used to access the /admin endpoints               |
 | DOCKER_API_URL       | &lt;url&gt;                   | http://10.0.0.125   | Url to docker api (must be available through port 80 for now) |
-| DOCKER_RUN_TIMEOUT   | &lt;seconds&gt;               | 30                  | Maximum number of seconds a container is allowed to run       |
-| MAX_OUTPUT_SIZE      | &lt;lines&gt;                 | 1000                | Maximum number of lines returned from a run                   |
+| DOCKER_RUN_TIMEOUT   | &lt;seconds&gt;               | 15                  | Maximum number of seconds a container is allowed to run       |
+| MAX_OUTPUT_SIZE      | &lt;bytes&gt;                 | 100000              | Maximum number of bytes allowed from the output of a run      |
 
 ## Api users
 An api token is required to run code. Users can be created with the `/admin/users` endpoint.
