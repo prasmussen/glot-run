@@ -14,18 +14,18 @@ To start glot-run in the foreground type: `glot/bin/glot foreground`.
 glot-run takes it's configuration from environment variables.
 All vars needs to be set, no default values are provided.
 
-| Variable name        | Allowed values                | Example             | Description                                                   |
-|:---------------------|:------------------------------|:--------------------|:--------------------------------------------------------------|
-| API_ENVIRONMENT      | development &#124; production | production          | Development mode will enable auto compiling of changed files  |
-| API_HTTP_LISTEN_IP   | &lt;ipv4 address&gt;          | 0.0.0.0             | Listen ip                                                     |
-| API_HTTP_LISTEN_PORT | 1-65535                       | 8090                | Listen port                                                   |
-| DATA_PATH            | &lt;filepath&gt;              | /home/app/data/     | Path to save data files (users, languages)                    |
-| LOG_PATH             | &lt;filepath&gt;              | /home/app/log/      | Path to save logs                                             |
-| BASE_URL             | &lt;url&gt;                   | https://run.glot.io | Base url to where the api is hosted                           |
-| ADMIN_TOKEN          | &lt;string&gt;                | some-secret         | Admin token used to access the /admin endpoints               |
-| DOCKER_API_URL       | &lt;url&gt;                   | http://10.0.0.125   | Url to docker api (must be available through port 80 for now) |
-| DOCKER_RUN_TIMEOUT   | &lt;seconds&gt;               | 15                  | Maximum number of seconds a container is allowed to run       |
-| MAX_OUTPUT_SIZE      | &lt;bytes&gt;                 | 100000              | Maximum number of bytes allowed from the output of a run      |
+| Variable name        | Allowed values                | Example               | Description                                                   |
+|:---------------------|:------------------------------|:----------------------|:--------------------------------------------------------------|
+| API_ENVIRONMENT      | development &#124; production | production            | Development mode will enable auto compiling of changed files  |
+| API_HTTP_LISTEN_IP   | &lt;ipv4 address&gt;          | 0.0.0.0               | Listen ip                                                     |
+| API_HTTP_LISTEN_PORT | 1-65535                       | 8090                  | Listen port                                                   |
+| DATA_PATH            | &lt;filepath&gt;              | /home/app/data/       | Path to save data files (users, languages)                    |
+| LOG_PATH             | &lt;filepath&gt;              | /home/app/log/        | Path to save logs                                             |
+| BASE_URL             | &lt;url&gt;                   | https://run.glot.io   | Base url to where the api is hosted                           |
+| ADMIN_TOKEN          | &lt;string&gt;                | some-secret           | Admin token used to access the /admin endpoints               |
+| DOCKER_API_URL       | &lt;url&gt;                   | http://10.0.0.2:2375  | Url to docker api (see docker configuration section below)    |
+| DOCKER_RUN_TIMEOUT   | &lt;seconds&gt;               | 15                    | Maximum number of seconds a container is allowed to run       |
+| MAX_OUTPUT_SIZE      | &lt;bytes&gt;                 | 100000                | Maximum number of bytes allowed from the output of a run      |
 
 ## Api users
 An api token is required to run code. Users can be created with the `/admin/users` endpoint.
@@ -54,5 +54,5 @@ A successful run should yield this response from the container: `{"stdout": "42\
 ## Docker configuration
 By default the docker api is only available through a unix socket and it needs
 to be configured to listen on a tcp socket. On ubuntu this can be done by
-adding the line `DOCKER_OPTS="-H tcp://0.0.0.0:80 -H unix:///var/run/docker.sock"`
+adding the line `DOCKER_OPTS="-H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock"`
 to `/etc/default/docker`.
