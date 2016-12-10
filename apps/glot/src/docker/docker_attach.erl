@@ -128,6 +128,7 @@ raw_container_attach_request(ContainerId) ->
         <<"Content-Type: application/vnd.docker.raw-stream\r\n">>,
         <<"Connection: Upgrade\r\n">>,
         <<"Upgrade: tcp\r\n">>,
+        <<"Host: 127.0.0.1\r\n">>,
         <<"\r\n">>
     ].
 
