@@ -1,6 +1,7 @@
 glot-run
 ========
 
+[![Build Status](https://travis-ci.org/prasmussen/glot-run.svg?branch=master)](https://travis-ci.org/prasmussen/glot-run)
 
 ## Overview
 glot-run provides a http api for running code inside docker containers.
