@@ -6,19 +6,16 @@ COPY . /glot-run/
 RUN export DEPS="\
 	git \
 	erlang \
-	erlang-webtool \
 	erlang-xmerl \
 	erlang-tools \
 	erlang-typer \
 	erlang-snmp \
-	erlang-test-server \
 	erlang-syntax-tools \
 	erlang-ssl \
 	erlang-sasl \
 	erlang-runtime-tools \
 	erlang-ssh \
 	erlang-stdlib \
-	erlang-ose \
 	erlang-otp-mibs \
 	erlang-reltool \
 	erlang-mnesia \
