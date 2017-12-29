@@ -53,7 +53,4 @@ container: `{"language": "python", "files": [{"name": "main.py", "content": "pri
 A successful run should yield this response from the container: `{"stdout": "42\n", "stderr": "", "error": ""}`.
 
 ## Docker configuration
-By default the docker api is only available through a unix socket and it needs
-to be configured to listen on a tcp socket. On ubuntu this can be done by
-adding the line `DOCKER_OPTS="-H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock"`
-to `/etc/default/docker`.
+See [docker_server_config.md](docker_server_config.md)
