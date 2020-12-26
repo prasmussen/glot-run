@@ -1,7 +1,7 @@
 glot-run
 ========
 
-## THIS REPO IS DEPRECATED AND HAS BEEN REPLACED BY [docker-run](https://github.com/glotcode/docker-run) and [glot-run 2](https://github.com/glotcode/docker-run)
+## THIS REPO IS DEPRECATED AND HAS BEEN REPLACED BY [docker-run](https://github.com/glotcode/docker-run) and [glot-run 2](https://github.com/glotcode/glot-run)
 
 
 ## Overview
